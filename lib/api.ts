@@ -4,7 +4,7 @@ import axios from "axios";
 
 // Create API instance
 const API = axios.create({
-  baseURL: process.env.API_BASE_URL || "http://api.finance.gyatva.com",
+  baseURL: process.env.API_BASE_URL || "https://api.finance.gyatva.com",
   headers: {
     "Content-Type": "application/json",
   },
