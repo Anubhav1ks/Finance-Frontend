@@ -1,0 +1,19 @@
+[3:25 pm, 22/11/2025] Anubhav Sharma: MySQL
+
+https://vesta.uclan.ac.uk/phpmyadmin/
+
+Username: nryeleti
+
+Second Database Account: nryeleti_db1
+
+Password: 9hhJWPCTJW
+[3:25 pm, 22/11/2025] Anubhav Sharma: Your webspace is,
+https://vesta.uclan.ac.uk/~nryeleti
+
+FTP access using FileZilla.
+
+                Host: sftp://vesta.uclan.ac.uk
+
+                Username: nryeleti
+
+                Password: 9hhJWPCTJW
