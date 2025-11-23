@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CalendarIcon, Clock, Video, MapPin, CheckCircle2, Bell } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import ScheduleInterviewDialog from "@/components/ScheduleInterviewDialog"
 
 // Mock interview slots (kept as UI reference)
 const mockInterviewSlots = [
@@ -137,63 +138,11 @@ export default function InterviewsPage() {
           </DialogTrigger>
 
           {/* ========================= BOOK INTERVIEW FORM ========================= */}
-          <DialogContent className="sm:max-w-[700px]">
-            <DialogHeader>
-              <DialogTitle>Schedule Interview</DialogTitle>
-              <DialogDescription>Select date & time for your interview</DialogDescription>
-            </DialogHeader>
-
-            {isSubmitted ? (
-              <div className="py-8 text-center">
-                <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Interview Scheduled!</h3>
-              </div>
-            ) : (
-              <form onSubmit={handleBookInterview} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                  {/* Calendar */}
-                  <div className="space-y-2">
-                    <Label>Select Date</Label>
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      disabled={disabledDates}
-                      className="rounded-md border"
-                    />
-                  </div>
-
-                  {/* Time Slots */}
-                  <div className="space-y-2">
-                    <Label>Available Times</Label>
-                    {selectedDate && availableSlots ? (
-                      <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {availableSlots.times.map((time) => (
-                          <button
-                            key={time}
-                            type="button"
-                            onClick={() => setSelectedTime(time)}
-                            className={`w-full p-3 rounded-lg border-2 transition ${selectedTime === time ? "border-accent bg-accent/10" : "border-border"
-                              }`}
-                          >
-                            <Clock className="h-4 w-4 inline-block mr-2" />
-                            {time}
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-muted-foreground">Select a date to see times</p>
-                    )}
-                  </div>
-                </div>
-
-                <Button className="w-full bg-accent text-accent-foreground" type="submit">
-                  Confirm Booking
-                </Button>
-              </form>
-            )}
-          </DialogContent>
+          <ScheduleInterviewDialog
+            open={isBookingOpen}
+            onOpenChange={setIsBookingOpen}
+            // applicationId={selectedApplication}
+          />
         </Dialog>
       </div>
 
