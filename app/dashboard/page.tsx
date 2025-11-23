@@ -59,7 +59,7 @@ export default function DashboardPage() {
   // INTERVIEW MODAL STATE
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<any>(null);
-
+  const [UserData,setUser] = useState<any>(null);
   const openScheduleModal = (app: any) => {
     setSelectedApplication(app.id);
     setIsBookingOpen(true);
@@ -95,6 +95,23 @@ export default function DashboardPage() {
     }
   };
 
+  useEffect(() => {
+    const checkAuth = () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+      setUser(user)
+    };
+
+    checkAuth();
+
+    window.addEventListener("auth-changed", checkAuth);
+    window.addEventListener("storage", checkAuth); // for other tabs
+
+    return () => {
+      window.removeEventListener("auth-changed", checkAuth);
+      window.removeEventListener("storage", checkAuth);
+    };
+  }, []);
   // FETCH SAVED INTERNSHIPS
   const fetchSavedInternships = async () => {
     try {
@@ -264,7 +281,7 @@ export default function DashboardPage() {
             {savedLoading ? (
               <p className="py-10 text-center">Loading saved internships...</p>
             ) : savedInternships.length >
-0 ? (
+              0 ? (
               savedInternships.map((internship) => (
                 <Card key={internship.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
@@ -335,6 +352,139 @@ export default function DashboardPage() {
               </Card>
             )}
           </TabsContent>
+          {/* Profile Tab */}
+          <TabsContent value="profile" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Profile Info */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <User className="h-5 w-5 text-accent" />
+                      Personal Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+                        <p className="text-lg">{UserData?.firstname} {UserData?.lastname}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Email</label>
+                        <p className="text-lg">{UserData?.email}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                        <p className="text-lg">+44 7700 900000</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Location</label>
+                        <p className="text-lg">London, UK</p>
+                      </div>
+                    </div>
+                    {/* <Button variant="outline" className="bg-transparent">
+                      Edit Profile
+                    </Button> */}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-accent" />
+                      Education
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="font-semibold text-lg">BSc Finance</p>
+                      <p className="text-muted-foreground">University of London</p>
+                      <p className="text-sm text-muted-foreground">Expected Graduation: 2026</p>
+                    </div>
+                    {/* <Button variant="outline" className="bg-transparent">
+                      Edit Education
+                    </Button> */}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Briefcase className="h-5 w-5 text-accent" />
+                      Skills
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary">Financial Analysis</Badge>
+                      <Badge variant="secondary">Excel</Badge>
+                      <Badge variant="secondary">PowerPoint</Badge>
+                      <Badge variant="secondary">Data Analysis</Badge>
+                      <Badge variant="secondary">Accounting</Badge>
+                      <Badge variant="secondary">Financial Modeling</Badge>
+                    </div>
+                    {/* <Button variant="outline" className="bg-transparent">
+                      Edit Skills
+                    </Button> */}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Profile Completion */}
+              <div className="lg:col-span-1">
+                <Card className="sticky top-20">
+                  <CardHeader>
+                    <CardTitle>Profile Completion</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm font-medium">75% Complete</span>
+                        <span className="text-sm text-muted-foreground">3/4</span>
+                      </div>
+                      <Progress value={75} className="h-2" />
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-medium text-sm">Personal Info</p>
+                          <p className="text-xs text-muted-foreground">Completed</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-medium text-sm">Education</p>
+                          <p className="text-xs text-muted-foreground">Completed</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
+                        <div>
+                          <p className="font-medium text-sm">Skills</p>
+                          <p className="text-xs text-muted-foreground">Completed</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
+                        <div>
+                          <p className="font-medium text-sm">CV Upload</p>
+                          <p className="text-xs text-muted-foreground">Pending</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                      Complete Profile
+                    </Button> */}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -345,12 +495,12 @@ export default function DashboardPage() {
         application={selectedApplication}
         onScheduled={fetchApplications}
       /> */}
-            <ScheduleInterviewDialog
-              open={isBookingOpen}
-              onOpenChange={setIsBookingOpen}
-              applicationId={selectedApplication}
-            />
-      
+      <ScheduleInterviewDialog
+        open={isBookingOpen}
+        onOpenChange={setIsBookingOpen}
+        applicationId={selectedApplication}
+      />
+
 
     </div>
   );
