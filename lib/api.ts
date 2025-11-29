@@ -1,10 +1,11 @@
 // src/API/axios.js
 import { ACCESS_TOKEN } from "../Constant";
 import axios from "axios";
+console.log("Base URL:", process.env.NEXT_PUBLIC_API_BASE_URL);
 
 // Create API instance
 const API = axios.create({
-  baseURL: process.env.API_BASE_URL || "https://api.finance.gyatva.com",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

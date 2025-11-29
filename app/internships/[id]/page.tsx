@@ -65,7 +65,9 @@ export default function InternshipDetailsPage({ params }: { params: { id: string
 
         const relatedRes = await API.get("/api/services");
         const transformedRelated =
-          relatedRes?.data?.data?.map(transformInternship) || [];
+          (relatedRes?.data?.data || [])
+            .filter((item: any) => item?.id !== params?.id)
+            .map(transformInternship);
 
         setRelatedInternships(transformedRelated);
       } catch (err) {
@@ -126,7 +128,7 @@ export default function InternshipDetailsPage({ params }: { params: { id: string
 
   const daysAgo = Math.floor(
     (new Date().getTime() - new Date(internship.postedDate).getTime()) /
-      (1000 * 60 * 60 * 24)
+    (1000 * 60 * 60 * 24)
   );
 
   return (

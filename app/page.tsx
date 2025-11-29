@@ -1,3 +1,4 @@
+'use client'
 import Link from "next/link"
 import {
   Search,
@@ -15,9 +16,62 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { categories, mockInternships } from "@/lib/mock-data"
 import { InternshipCard } from "@/components/internship-card"
-
+import API from "@/lib/api"
+import { useEffect, useState } from "react"
+const transformInternship = (item: any) => {
+  return {
+    id: item.id,
+    title: item.title,
+    company: item.companyName,
+    location: item.location,
+    mode: item.mode,
+    stipend: item.monthlyStipend,
+    duration: item.duration,
+    category: item.category,
+    description: item.jobDescription,
+    requirements: JSON.parse(item.requirements || "[]"),
+    skills: item.requiredSkills || [],
+    software: item.softwareTools || [],
+    certifications: item.preferredCertifications
+      ? item.preferredCertifications.split(",").map((c: string) => c.trim())
+      : [],
+    isPaid: item.isPaid,
+    postedDate: item.createdOn,
+  };
+};
 export default function HomePage() {
-  const featuredInternships = mockInternships.slice(0, 3)
+  const [internships, setInternships] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const featuredInternships = internships.slice(0, 3)
+
+
+
+
+  // ⬇️ Fetch internships from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await API.get("/api/services");
+        const apiData = res.data.data || [];
+
+        const transformed = apiData.map(transformInternship);
+
+        setInternships(transformed);
+      } catch (err) {
+        console.error(err);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+
+
+
 
   return (
     <div className="flex flex-col">
